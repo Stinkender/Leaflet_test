@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html>
+<head> 
+	<title>QGIS2leaf webmap</title>
+	
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.2/leaflet.css" /> <!-- we will us e this as the styling script for our webmap-->
+	<link rel="stylesheet" href="css/MarkerCluster.css" />
+	<link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+	<link rel="stylesheet" type="text/css" href="css/own_style.css">
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script> <!-- this is the javascript file that does the magic-->
+	<script src="js/Autolinker.min.js"></script>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+</head>
+<body>
+	<div id="map"></div> <!-- this is the initial look of the map. in most cases it is done externally using something like a map.css stylesheet were you can specify the look of map elements, like background color tables and so on.-->
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.2/leaflet.js"></script> <!-- this is the javascript file that does the magic-->
+	<script src="js/leaflet.markercluster.js"></script>
+	
+				<script src='data/exp_peruspiirit3067.js' ></script>
+				
+				<script src='data/exp_tammiloka2014palautteetperuspiirit.js' ></script>
+				
+	<script>
+		var map = L.map('map', { zoomControl:true }).fitBounds([[60.1515873864,24.8909580657],[60.1970973857,24.986082147]]);
+		var additional_attrib = 'created w. <a href="https://github.com/geolicious/qgis2leaf" target ="_blank">qgis2leaf</a> by <a href="http://www.geolicious.de" target ="_blank">Geolicious</a> & contributors<br>';
+	var feature_group = new L.featureGroup([]);
+
+	var raster_group = new L.LayerGroup([]);
+	
+	var basemap= L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png');
+	map.attributionControl.addAttribution(additional_attrib + '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>');	
+	basemap.addTo(map);	
+	var layerOrder=new Array();
+				function pop_tammiloka2014palautteetperuspiirit(feature, layer) {
+										var popupContent = '<table><tr><th scope="row">service_re</th><td>' + Autolinker.link(String(feature.properties.service_re)) + '</td></tr><tr><th scope="row">service_co</th><td>' + Autolinker.link(String(feature.properties.service_co)) + '</td></tr><tr><th scope="row">descriptio</th><td>' + Autolinker.link(String(feature.properties.descriptio)) + '</td></tr><tr><th scope="row">requested_</th><td>' + Autolinker.link(String(feature.properties.requested_)) + '</td></tr><tr><th scope="row">updated_da</th><td>' + Autolinker.link(String(feature.properties.updated_da)) + '</td></tr><tr><th scope="row">status</th><td>' + Autolinker.link(String(feature.properties.status)) + '</td></tr><tr><th scope="row">status_not</th><td>' + Autolinker.link(String(feature.properties.status_not)) + '</td></tr><tr><th scope="row">agency_res</th><td>' + Autolinker.link(String(feature.properties.agency_res)) + '</td></tr><tr><th scope="row">service_na</th><td>' + Autolinker.link(String(feature.properties.service_na)) + '</td></tr><tr><th scope="row">address</th><td>' + Autolinker.link(String(feature.properties.address)) + '</td></tr><tr><th scope="row">lat</th><td>' + Autolinker.link(String(feature.properties.lat)) + '</td></tr><tr><th scope="row">long</th><td>' + Autolinker.link(String(feature.properties.long)) + '</td></tr><tr><th scope="row">media_url</th><td>' + Autolinker.link(String(feature.properties.media_url)) + '</td></tr><tr><th scope="row">ID</th><td>' + Autolinker.link(String(feature.properties.ID)) + '</td></tr><tr><th scope="row">TUNNUS</th><td>' + Autolinker.link(String(feature.properties.TUNNUS)) + '</td></tr><tr><th scope="row">SUURPIIRI_</th><td>' + Autolinker.link(String(feature.properties.SUURPIIRI_)) + '</td></tr><tr><th scope="row">KUNTA</th><td>' + Autolinker.link(String(feature.properties.KUNTA)) + '</td></tr><tr><th scope="row">NIMI</th><td>' + Autolinker.link(String(feature.properties.NIMI)) + '</td></tr><tr><th scope="row">NIMI_SE</th><td>' + Autolinker.link(String(feature.properties.NIMI_SE)) + '</td></tr><tr><th scope="row">SUURPIIR_1</th><td>' + Autolinker.link(String(feature.properties.SUURPIIR_1)) + '</td></tr><tr><th scope="row">SUURPIIR_2</th><td>' + Autolinker.link(String(feature.properties.SUURPIIR_2)) + '</td></tr><tr><th scope="row">KUNTA_NIMI</th><td>' + Autolinker.link(String(feature.properties.KUNTA_NIMI)) + '</td></tr><tr><th scope="row">KUNTA_NI_1</th><td>' + Autolinker.link(String(feature.properties.KUNTA_NI_1)) + '</td></tr><tr><th scope="row">OMISTAJA</th><td>' + Autolinker.link(String(feature.properties.OMISTAJA)) + '</td></tr></table>';
+					layer.bindPopup(popupContent);
+
+
+				}
+						
+				var exp_tammiloka2014palautteetperuspiiritJSON = new L.geoJson(exp_tammiloka2014palautteetperuspiirit,{
+					onEachFeature: pop_tammiloka2014palautteetperuspiirit,
+					pointToLayer: function (feature, latlng) {  
+						return L.circleMarker(latlng, {
+							radius: feature.properties.radius_qgis2leaf,
+							fillColor: feature.properties.color_qgis2leaf,
+							color: '#000',
+							weight: 0.2,
+							opacity: feature.properties.transp_qgis2leaf,
+							fillOpacity: feature.properties.transp_qgis2leaf
+							})
+						}
+					});
+				
+				feature_group.addLayer(exp_tammiloka2014palautteetperuspiiritJSON);
+				
+						//add comment sign to hide this layer on the map in the initial view.
+						exp_tammiloka2014palautteetperuspiiritJSON.addTo(map);
+				function pop_peruspiirit3067(feature, layer) {
+										var popupContent = '<table><tr><th scope="row">ID</th><td>' + Autolinker.link(String(feature.properties.ID)) + '</td></tr><tr><th scope="row">TUNNUS</th><td>' + Autolinker.link(String(feature.properties.TUNNUS)) + '</td></tr><tr><th scope="row">SUURPIIRI_</th><td>' + Autolinker.link(String(feature.properties.SUURPIIRI_)) + '</td></tr><tr><th scope="row">KUNTA</th><td>' + Autolinker.link(String(feature.properties.KUNTA)) + '</td></tr><tr><th scope="row">NIMI</th><td>' + Autolinker.link(String(feature.properties.NIMI)) + '</td></tr><tr><th scope="row">NIMI_SE</th><td>' + Autolinker.link(String(feature.properties.NIMI_SE)) + '</td></tr><tr><th scope="row">SUURPIIR_1</th><td>' + Autolinker.link(String(feature.properties.SUURPIIR_1)) + '</td></tr><tr><th scope="row">SUURPIIR_2</th><td>' + Autolinker.link(String(feature.properties.SUURPIIR_2)) + '</td></tr><tr><th scope="row">KUNTA_NIMI</th><td>' + Autolinker.link(String(feature.properties.KUNTA_NIMI)) + '</td></tr><tr><th scope="row">KUNTA_NI_1</th><td>' + Autolinker.link(String(feature.properties.KUNTA_NI_1)) + '</td></tr><tr><th scope="row">OMISTAJA</th><td>' + Autolinker.link(String(feature.properties.OMISTAJA)) + '</td></tr><tr><th scope="row">koulutusaste_peruspiirit_2014_tutkinnon_suorittaneet</th><td>' + Autolinker.link(String(feature.properties.koulutusaste_peruspiirit_2014_tutkinnon_suorittaneet)) + '</td></tr><tr><th scope="row">koulutusaste_peruspiirit_2014_keskiaste</th><td>' + Autolinker.link(String(feature.properties.koulutusaste_peruspiirit_2014_keskiaste)) + '</td></tr><tr><th scope="row">koulutusaste_peruspiirit_2014_korkea_aste_yht</th><td>' + Autolinker.link(String(feature.properties.koulutusaste_peruspiirit_2014_korkea_aste_yht)) + '</td></tr><tr><th scope="row">koulutusaste_peruspiirit_2014_perusaste_tuntematon</th><td>' + Autolinker.link(String(feature.properties.koulutusaste_peruspiirit_2014_perusaste_tuntematon)) + '</td></tr><tr><th scope="row">koulutusaste_peruspiirit_2014_perus_tuntematon_osuus</th><td>' + Autolinker.link(String(feature.properties.koulutusaste_peruspiirit_2014_perus_tuntematon_osuus)) + '</td></tr><tr><th scope="row">koulutusaste_peruspiirit_2014_keski_osuus</th><td>' + Autolinker.link(String(feature.properties.koulutusaste_peruspiirit_2014_keski_osuus)) + '</td></tr><tr><th scope="row">koulutusaste_peruspiirit_2014_korkea_osuus</th><td>' + Autolinker.link(String(feature.properties.koulutusaste_peruspiirit_2014_korkea_osuus)) + '</td></tr><tr><th scope="row">helsinki_vaesto_peruspiirit_2014b_vaesto</th><td>' + Autolinker.link(String(feature.properties.helsinki_vaesto_peruspiirit_2014b_vaesto)) + '</td></tr><tr><th scope="row">helsinki_vaesto_peruspiirit_2014b_tuhatta_ihmista</th><td>' + Autolinker.link(String(feature.properties.helsinki_vaesto_peruspiirit_2014b_tuhatta_ihmista)) + '</td></tr></table>';
+					layer.bindPopup(popupContent);
+
+
+				}
+						
+				var exp_peruspiirit3067JSON = new L.geoJson(exp_peruspiirit3067,{
+					onEachFeature: pop_peruspiirit3067,
+					style: function (feature) {
+						return {color: feature.properties.border_color_qgis2leaf,
+								fillColor: feature.properties.color_qgis2leaf,
+								weight: feature.properties.radius_qgis2leaf,
+								opacity: feature.properties.transp_qgis2leaf,
+								fillOpacity: feature.properties.transp_qgis2leaf};
+						}
+					});
+				feature_group.addLayer(exp_peruspiirit3067JSON);
+				layerOrder[layerOrder.length] = exp_peruspiirit3067JSON;
+				for (index = 0; index < layerOrder.length; index++) {
+					map.removeLayer(layerOrder[index]);map.addLayer(layerOrder[index]);
+				}
+				
+						//add comment sign to hide this layer on the map in the initial view.
+						exp_peruspiirit3067JSON.addTo(map);
+		var title = new L.Control();
+		title.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+			this.update();
+			return this._div;
+	    };
+	    title.update = function () {
+			this._div.innerHTML = '<h2>This is the title</h2>This is the subtitle'
+		};
+		title.addTo(map);
+	L.control.layers({'OSM Black & White': basemap},{"peruspiirit_3067": exp_peruspiirit3067JSON,"tammi_loka_2014_palautteet_peruspiirit": exp_tammiloka2014palautteetperuspiiritJSON},{collapsed:false}).addTo(map);
+		map.locate({setView: true, maxZoom: 16});
+		function onLocationFound(e) {
+    		var radius = e.accuracy / 2;
+			L.marker(e.latlng).addTo(map)
+        	.bindPopup("You are within " + radius + " meters from this point").openPopup();
+			L.circle(e.latlng, radius).addTo(map);
+		}
+		map.on('locationfound', onLocationFound);
+		
+	L.control.scale({options: {position: 'bottomleft',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map);
+	</script>
+</body>
+</html>
+	
